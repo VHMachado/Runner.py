@@ -6,16 +6,17 @@ pygame.init()
 pygame.display.set_caption("Runner")
 
 # Create game window
-window_width = 1000
-window_height = 700
+window_width = 800
+window_height = 400
 screen = pygame.display.set_mode((window_width, window_height))
 
-# Create the "Surface"(the content that is going to be displayed on the window)
-surface_width = 1000
-surface_height = 700
-surface_position = (0, 0)
-display_surface = pygame.Surface((surface_width, surface_height))
-display_surface.fill("Blue")
+# Create the Sky image "Surface"(a content that is going to be displayed on the window)
+sky_surface = pygame.image.load("./Assets/graphics/Sky.png")
+sky_position = (0, 0)
+
+# Create the ground Surface
+ground_surface = pygame.image.load("./Assets/graphics/ground.png")
+ground_position = (0, 232)
 
 # Create the clock object, which is called inside the While loop in order to set the framerate
 clock = pygame.time.Clock()
@@ -27,7 +28,8 @@ while True:
             pygame.quit()
             exit()
 
-    screen.blit(display_surface, surface_position)
+    screen.blit(sky_surface, sky_position)
+    screen.blit(ground_surface, ground_position)
 
     # Updates the screen so it doesn't close after the code runs
     pygame.display.update()
