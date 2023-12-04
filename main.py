@@ -1,7 +1,6 @@
 import pygame
-from operator import sub
 from enemies import snail
-from player import player
+from player import player, jump, fall
 from fontConfig import font_config
 from score import display_score
 from lose import lose_text
@@ -40,13 +39,12 @@ snail_surface, snail_position = snail()
 
 # Creates the player in the game
 player_suface, player_position = player()
-
-mouse_click = False
 lose = False
+gravity = 0
 
 while True:
-    # Close the game when the "X" button is clicked
     for event in pygame.event.get():
+        # Close the game when the "X" button is clicked
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
@@ -54,6 +52,9 @@ while True:
             mouse_position = event.pos
         if event.type == pygame.MOUSEBUTTONDOWN:
             mouse_click = True
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                jump(player_position)
 
     screen.blit(sky_surface, sky_position)
     screen.blit(ground_surface, ground_position)
@@ -61,15 +62,21 @@ while True:
     screen.blit(snail_surface, snail_position)
     screen.blit(player_suface, player_position)
 
+    # pygame.draw.line(screen, "pink", (0, 0), (800, 400), 5)
+
     player_position.right += 5
     snail_position.left -= 5
 
     if snail_position.left <= -80:
         snail_position = snail()[1]
+
     if player_position.colliderect(snail_position):
         snail_position = snail()[1]
         player_position = player()[1]
         lose = True
+
+    fall(player_position, gravity)
+
     if lose:
         screen.blit(text_lose_surface, text_lose_position)
 
