@@ -1,7 +1,6 @@
-from pygame import font
+from pygame import font, time
 
 
-# Set the font that is going to be used to display text
 def font_config():
     font_type = "./Assets/font/Pixeltype.ttf"
     font_size = 50
@@ -10,16 +9,15 @@ def font_config():
 
 
 def display_score(screen):
+    score = time.get_ticks()
     font = font_config()
-    text = "Score:"
+    text = f"Score: {score}"
     color = "Black"
     antialising = False
     position = (400, 30)
     surface = font.render(text, antialising, color)
     rectangle = surface.get_rect(center=(position))
     screen.blit(surface, rectangle)
-
-    # Creates the loose text screen
 
 
 def display_lose_screen(screen):

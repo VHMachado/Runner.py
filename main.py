@@ -6,9 +6,6 @@ from sys import exit
 
 pygame.init()
 
-# Set a timer, that is used to calculate the score
-timer = pygame.time.get_ticks()
-
 # Set game title
 pygame.display.set_caption("Runner")
 
@@ -29,9 +26,9 @@ snail_surface, snail_rectangle = snail()
 player_suface, player_rectangle = player()
 
 # Set initial variables
+score = 0
 gravity = 0
 jump_cooldown = True
-
 ground_position = get_ground_position()
 
 while True:
