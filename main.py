@@ -1,9 +1,7 @@
 import pygame
 from enemies import snail
 from player import player
-from fontConfig import font_config
-from score import display_score
-from lose import display_lose_screen
+from texts import display_score, display_lose_screen
 from sys import exit
 
 pygame.init()
@@ -31,9 +29,6 @@ ground_position = (0, 232)
 
 # Create the clock object, which is called inside the While loop in order to set the framerate
 clock = pygame.time.Clock()
-
-# Set the font that is going to be used to display text
-font = font_config()
 
 # Creates the enemies in the game
 snail_surface, snail_rectangle = snail()
@@ -81,7 +76,7 @@ while True:
         screen.blit(sky_surface, sky_position)
         screen.blit(ground_surface, ground_position)
         screen.blit(snail_surface, snail_rectangle)
-        display_score(font, screen)
+        display_score(screen)
 
         # Makes the player fall after it jumps
         gravity += 1
@@ -113,8 +108,8 @@ while True:
     else:
         screen.blit(sky_surface, sky_position)
         screen.blit(ground_surface, ground_position)
-        display_score(font, screen)
-        display_lose_screen(font, screen)
+        display_score(screen)
+        display_lose_screen(screen)
 
     # Updates the screen so it doesn't close after the code runs
     pygame.display.update()
