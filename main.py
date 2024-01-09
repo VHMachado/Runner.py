@@ -1,6 +1,5 @@
 import pygame
-from enemies import snail
-from player import player
+from characters import player, snail
 from texts import display_score, display_lose_screen
 from sys import exit
 
