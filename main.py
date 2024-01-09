@@ -1,6 +1,7 @@
 import pygame
 from characters import player, snail
 from texts import display_score, display_lose_screen
+from scenario import display_scenario, get_ground_position
 from sys import exit
 
 pygame.init()
@@ -18,14 +19,6 @@ screen = pygame.display.set_mode(resolution)
 # Activates the game
 game_active = True
 
-# Create the Sky image "Surface"(a content that is going to be displayed on the window)
-sky_surface = pygame.image.load("./Assets/graphics/Sky.png").convert()
-sky_position = (0, 0)
-
-# Create the ground Surface
-ground_surface = pygame.image.load("./Assets/graphics/ground.png").convert()
-ground_position = (0, 232)
-
 # Create the clock object, which is called inside the While loop in order to set the framerate
 clock = pygame.time.Clock()
 
@@ -38,6 +31,8 @@ player_suface, player_rectangle = player()
 # Set initial variables
 gravity = 0
 jump_cooldown = True
+
+ground_position = get_ground_position()
 
 while True:
     for event in pygame.event.get():
@@ -72,10 +67,9 @@ while True:
 
     if game_active:
         # Puts the scenario and the enemy on the screen
-        screen.blit(sky_surface, sky_position)
-        screen.blit(ground_surface, ground_position)
-        screen.blit(snail_surface, snail_rectangle)
+        display_scenario(screen)
         display_score(screen)
+        screen.blit(snail_surface, snail_rectangle)
 
         # Makes the player fall after it jumps
         gravity += 1
@@ -105,8 +99,7 @@ while True:
         if player_rectangle.colliderect(snail_rectangle):
             game_active = False
     else:
-        screen.blit(sky_surface, sky_position)
-        screen.blit(ground_surface, ground_position)
+        display_scenario(screen)
         display_score(screen)
         display_lose_screen(screen)
 
