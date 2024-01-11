@@ -8,8 +8,8 @@ def font_config():
     return game_font
 
 
-def display_score(screen):
-    score = time.get_ticks()
+def display_score(screen, timer):
+    score = time.get_ticks() - timer
     font = font_config()
     text = f"Score: {score}"
     color = "Black"

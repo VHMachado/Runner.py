@@ -26,7 +26,7 @@ snail_surface, snail_rectangle = snail()
 player_suface, player_rectangle = player()
 
 # Set initial variables
-score = 0
+timer = 0
 gravity = 0
 jump_cooldown = True
 ground_position = get_ground_position()
@@ -65,7 +65,7 @@ while True:
     if game_active:
         # Puts the scenario and the enemy on the screen
         display_scenario(screen)
-        display_score(screen)
+        display_score(screen, timer)
         screen.blit(snail_surface, snail_rectangle)
 
         # Makes the player fall after it jumps
@@ -97,7 +97,8 @@ while True:
             game_active = False
     else:
         display_scenario(screen)
-        display_score(screen)
+        timer = pygame.time.get_ticks()
+        display_score(screen, timer)
         display_lose_screen(screen)
 
     # Updates the screen so it doesn't close after the code runs
