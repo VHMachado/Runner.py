@@ -1,6 +1,6 @@
 import pygame
-from characters import player, snail
-from texts import display_score, display_lose_screen
+from characters import player_stand, player_walk_1, snail
+from texts import display_score, display_lose_screen, display_menu_text
 from scenario import display_scenario, get_ground_position
 from sys import exit
 
@@ -13,22 +13,24 @@ pygame.display.set_caption("Runner")
 resolution = (800, 400)
 screen = pygame.display.set_mode(resolution)
 
-# Activates the game
-game_active = True
-
 # Create the clock object, which is called inside the While loop in order to set the framerate
 clock = pygame.time.Clock()
 
 # Creates the enemies in the game
 snail_surface, snail_rectangle = snail()
 
+# Creates the player sprite that is displayed on the menu
+player_stand_surface, player_stand_rectangle = player_stand()
+
 # Creates the player in the game
-player_suface, player_rectangle = player()
+player_suface, player_rectangle = player_walk_1()
 
 # Set initial variables
 timer = 0
 gravity = 0
 jump_cooldown = True
+acess_menu = True
+game_active = False
 ground_position = get_ground_position()
 
 while True:
@@ -53,7 +55,11 @@ while True:
             # Checks if the pressed button is the SPACE key
             if event.key == pygame.K_SPACE:
                 # If the SPACE key has been pressed, the player will jump
-                if game_active:
+                if acess_menu:
+                    acess_menu = False
+                    game_active = True
+                    snail_rectangle = snail()[1]
+                elif game_active:
                     if jump_cooldown == True:
                         gravity = -20
                         jump_cooldown = False
@@ -61,8 +67,11 @@ while True:
                 else:
                     game_active = True
                     snail_rectangle = snail()[1]
-
-    if game_active:
+    if acess_menu:
+        screen.fill((94, 129, 162))
+        screen.blit(player_stand_surface, player_stand_rectangle)
+        display_menu_text(screen)
+    elif game_active:
         # Puts the scenario and the enemy on the screen
         display_scenario(screen)
         display_score(screen, timer)
