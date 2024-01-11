@@ -9,7 +9,7 @@ def font_config():
 
 
 def display_score(screen, timer):
-    score = time.get_ticks() - timer
+    score = (time.get_ticks() - timer) // 1000
     font = font_config()
     text = f"Score: {score}"
     color = "Black"
