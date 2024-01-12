@@ -95,10 +95,11 @@ while True:
 
         # Makes the player lose if the snail collide with the player
         if player_rectangle.colliderect(snail_rectangle):
+            final_score = get_score(timer)
             game_active = False
     else:
         display_scenario(screen)
-        display_lose_screen(screen)
+        display_lose_screen(screen, final_score)
 
     # Updates the screen so it doesn't close after the code runs
     pygame.display.update()

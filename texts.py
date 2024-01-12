@@ -54,23 +54,29 @@ def display_score(screen, timer):
     screen.blit(surface, rectangle)
 
 
-def display_lose_screen(screen):
+def display_lose_screen(screen, final_score):
     font = font_config()
 
     lose_text = "You Lose!"
     play_again_text = "Press SPACE to play again"
+    final_score_text = f"Your final score was: {final_score}"
 
     antialising = False
     color = "Black"
 
-    lose_text_position = (400, 150)
+    lose_text_position = (400, 100)
     lose_text_surface = font.render(lose_text, antialising, color)
-    lose_text_rectangle = lose_text_surface.get_rect(midbottom=(lose_text_position))
+    lose_text_rectangle = lose_text_surface.get_rect(center=(lose_text_position))
     screen.blit(lose_text_surface, lose_text_rectangle)
+
+    final_score_position = (400, 150)
+    final_score_surface = font.render(final_score_text, antialising, color)
+    final_score_rectangle = final_score_surface.get_rect(center=(final_score_position))
+    screen.blit(final_score_surface, final_score_rectangle)
 
     play_again_text_position = (400, 200)
     play_again_text_surface = font.render(play_again_text, antialising, color)
     play_again_text_rectangle = play_again_text_surface.get_rect(
-        midbottom=(play_again_text_position)
+        center=(play_again_text_position)
     )
     screen.blit(play_again_text_surface, play_again_text_rectangle)
