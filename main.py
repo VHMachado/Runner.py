@@ -1,13 +1,13 @@
 import pygame
 from characters import player_stand, player_walk_1, snail
-from texts import display_score, display_lose_screen, display_menu_text
+from texts import get_score, display_score, display_lose_screen, display_menu_text
 from scenario import display_scenario, get_ground_position
 from sys import exit
 
 pygame.init()
 
 # Set game title
-pygame.display.set_caption("Runner")
+pygame.display.set_caption("Runner.py")
 
 # Create game window
 resolution = (800, 400)
@@ -27,6 +27,7 @@ player_suface, player_rectangle = player_walk_1()
 
 # Set initial variables
 timer = 0
+score = 0
 gravity = 0
 jump_cooldown = True
 acess_menu = True
@@ -39,17 +40,6 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
-        # Detects mouse movement
-        if event.type == pygame.MOUSEMOTION:
-            mouse_position = event.pos
-        # Checks if the player has clicked
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            # If the mouse button has been pressed, the player will jump
-            if player_rectangle.collidepoint(mouse_position):
-                if jump_cooldown == True:
-                    gravity = -20
-                    jump_cooldown = False
-                    ground_collision = False
         # Checks if any key has been pressed on the keyboard
         if event.type == pygame.KEYDOWN:
             # Checks if the pressed button is the SPACE key
@@ -65,12 +55,14 @@ while True:
                         jump_cooldown = False
                         ground_collision = False
                 else:
+                    timer = pygame.time.get_ticks()
                     snail_rectangle = snail()[1]
                     game_active = True
     if acess_menu:
         screen.fill((94, 129, 162))
         screen.blit(player_stand_surface, player_stand_rectangle)
         display_menu_text(screen)
+        timer = pygame.time.get_ticks()
     elif game_active:
         # Puts the scenario and the enemy on the screen
         display_scenario(screen)
@@ -106,7 +98,6 @@ while True:
             game_active = False
     else:
         display_scenario(screen)
-        display_score(screen, timer)
         display_lose_screen(screen)
 
     # Updates the screen so it doesn't close after the code runs

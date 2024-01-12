@@ -36,11 +36,13 @@ def display_menu_text(screen):
     screen.blit(bottom_text_surface, bottom_text_rectangle)
 
 
+def get_score(timer):
+    return (time.get_ticks() - timer) // 1000
+
+
 def display_score(screen, timer):
     font = font_config()
-
-    score = (time.get_ticks() - timer) // 1000
-    text = f"Score: {score}"
+    text = f"Score: {get_score(timer)}"
 
     color = "Black"
     antialising = False
