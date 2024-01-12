@@ -65,8 +65,8 @@ while True:
                         jump_cooldown = False
                         ground_collision = False
                 else:
-                    game_active = True
                     snail_rectangle = snail()[1]
+                    game_active = True
     if acess_menu:
         screen.fill((94, 129, 162))
         screen.blit(player_stand_surface, player_stand_rectangle)
@@ -106,7 +106,6 @@ while True:
             game_active = False
     else:
         display_scenario(screen)
-        timer = pygame.time.get_ticks()
         display_score(screen, timer)
         display_lose_screen(screen)
 
