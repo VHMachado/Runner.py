@@ -39,7 +39,7 @@ ground_position = get_ground_position()
 
 # Timer
 enemy_timer = pygame.USEREVENT + 1
-pygame.time.set_timer(enemy_timer, 900)
+pygame.time.set_timer(enemy_timer, 1500)
 
 while True:
     for event in pygame.event.get():
@@ -96,16 +96,19 @@ while True:
         # Enemy Movement
         if enemies_rect_list:
             for enemy_rectangle in enemies_rect_list:
-                enemy_rectangle.x -= 5
-                screen.blit(snail_surface, enemy_rectangle)
+                enemy_rectangle.left -= 5
+
+                # Teleports the enemy back to it's initial position if it passes the screen limit
+                if enemy_rectangle.left <= -100:
+                    enemies_rect_list.remove(enemy_rectangle)
+
                 # Makes the player lose if the snail collide with the player
                 if player_rectangle.colliderect(enemy_rectangle):
                     final_score = get_score(timer)
                     game_active = False
                     enemies_rect_list = []
-                # Teleports the enemy back to it's initial position if it passes the screen limit
-                if enemy_rectangle.left <= -80:
-                    enemy_rectangle = snail()[1]
+
+                screen.blit(snail_surface, enemy_rectangle)
         else:
             enemies_rect_list = []
 
