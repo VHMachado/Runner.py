@@ -1,4 +1,5 @@
 from pygame import image, transform
+from random import randint
 
 
 def player_stand():
@@ -18,6 +19,6 @@ def player_walk_1():
 
 def snail():
     surface = image.load("./Assets/graphics/snail/snail1.png").convert_alpha()
-    position = [720, 232]
+    position = [randint(900, 1000), 232]
     rectangle = surface.get_rect(midbottom=(position))
     return surface, rectangle

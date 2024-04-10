@@ -4,6 +4,7 @@ from texts import get_score, display_score, display_lose_screen, display_menu_te
 from scenario import display_scenario, get_ground_position
 from sys import exit
 
+
 pygame.init()
 
 # Set game title
@@ -19,6 +20,8 @@ clock = pygame.time.Clock()
 # Creates the enemies in the game
 snail_surface, snail_rectangle = snail()
 
+enemies_rect_list = []
+
 # Creates the player sprite that is displayed on the menu
 player_stand_surface, player_stand_rectangle = player_stand()
 
@@ -30,9 +33,13 @@ timer = 0
 score = 0
 gravity = 0
 jump_cooldown = True
-acess_menu = True
+access_menu = True
 game_active = False
 ground_position = get_ground_position()
+
+# Timer
+enemy_timer = pygame.USEREVENT + 1
+pygame.time.set_timer(enemy_timer, 900)
 
 while True:
     for event in pygame.event.get():
@@ -45,8 +52,8 @@ while True:
             # Checks if the pressed button is the SPACE key
             if event.key == pygame.K_SPACE:
                 # If the SPACE key has been pressed, the player will jump
-                if acess_menu:
-                    acess_menu = False
+                if access_menu:
+                    access_menu = False
                     game_active = True
                     snail_rectangle = snail()[1]
                 elif game_active:
@@ -58,7 +65,11 @@ while True:
                     timer = pygame.time.get_ticks()
                     snail_rectangle = snail()[1]
                     game_active = True
-    if acess_menu:
+
+        if event.type == enemy_timer and game_active:
+            enemies_rect_list.append(snail()[1])
+
+    if access_menu:
         screen.fill((94, 129, 162))
         screen.blit(player_stand_surface, player_stand_rectangle)
         display_menu_text(screen)
@@ -67,7 +78,6 @@ while True:
         # Puts the scenario and the enemy on the screen
         display_scenario(screen)
         display_score(screen, timer)
-        screen.blit(snail_surface, snail_rectangle)
 
         # Makes the player fall after it jumps
         gravity += 1
@@ -77,26 +87,28 @@ while True:
             if ground_collision == True:
                 jump_cooldown = True
 
-        # Checks if there is collision between the plauer and the ground, making him stand above it
+        # Player Movement
         if player_rectangle.bottom >= ground_position[1]:
             player_rectangle.bottom = ground_position[1]
             ground_collision = True
-
-        # Puts the player on the screen
         screen.blit(player_suface, player_rectangle)
 
-        # Moves the player and the enemies
-        # player_rectangle.right += 5
-        snail_rectangle.left -= 5
+        # Enemy Movement
+        if enemies_rect_list:
+            for enemy_rectangle in enemies_rect_list:
+                enemy_rectangle.x -= 5
+                screen.blit(snail_surface, enemy_rectangle)
+                # Makes the player lose if the snail collide with the player
+                if player_rectangle.colliderect(enemy_rectangle):
+                    final_score = get_score(timer)
+                    game_active = False
+                    enemies_rect_list = []
+                # Teleports the enemy back to it's initial position if it passes the screen limit
+                if enemy_rectangle.left <= -80:
+                    enemy_rectangle = snail()[1]
+        else:
+            enemies_rect_list = []
 
-        # Teleports the enemy back to it's initial position if it passes the screen limit
-        if snail_rectangle.left <= -80:
-            snail_rectangle = snail()[1]
-
-        # Makes the player lose if the snail collide with the player
-        if player_rectangle.colliderect(snail_rectangle):
-            final_score = get_score(timer)
-            game_active = False
     else:
         display_scenario(screen)
         display_lose_screen(screen, final_score)
