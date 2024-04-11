@@ -8,7 +8,6 @@ from characters import (
     snail,
     fly,
     gravity,
-    check_can_jump,
     check_ground_collision,
 )
 from sys import exit
@@ -100,13 +99,10 @@ while True:
         # Makes the player fall after it jumps
         gravity_value, player_rectangle.y = gravity(gravity_value, player_rectangle.y)
 
-        # Makes the player stay above the ground
-        ground_collision, player_rectangle.bottom = check_ground_collision(
+        # keeps the player above the ground and tells if he can jump if colliding with it
+        ground_collision, can_jump, player_rectangle.bottom = check_ground_collision(
             player_rectangle.bottom, ground_position[1]
         )
-
-        # Sets the jump cooldown to "true" when the player hits the ground.
-        can_jump = check_can_jump(can_jump, ground_collision)
 
         # Draws the player on the screen
         screen.blit(player_suface, player_rectangle)
