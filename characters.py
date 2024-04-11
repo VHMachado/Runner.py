@@ -29,17 +29,3 @@ def fly():
     position = [randint(900, 1000), 140]
     rectangle = surface.get_rect(midbottom=(position))
     return surface, rectangle
-
-
-def gravity(gravity, player_y):
-    gravity += 1
-    player_y += gravity
-    return gravity, player_y
-
-
-def check_ground_collision(player_bottom, ground_position):
-    if player_bottom >= ground_position:
-        player_bottom = ground_position
-        return True, True, player_bottom
-    else:
-        return False, False, player_bottom
