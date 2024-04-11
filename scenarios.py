@@ -1,4 +1,5 @@
-from pygame import image
+from pygame import image, time
+from texts import display_menu_text
 
 
 def display_scenario(screen):
@@ -15,3 +16,15 @@ def get_ground_position():
 
 def get_sky_position():
     return (0, 0)
+
+
+def display_menu(
+    screen,
+    player_stand_surface,
+    player_stand_rectangle,
+):
+    screen.fill((94, 129, 162))
+    screen.blit(player_stand_surface, player_stand_rectangle)
+    display_menu_text(screen)
+    timer = time.get_ticks()
+    return timer

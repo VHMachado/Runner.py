@@ -1,7 +1,7 @@
 import pygame
 from characters import player_stand, player_walk_1, snail, fly
-from texts import get_score, display_score, display_lose_screen, display_menu_text
-from scenario import display_scenario, get_ground_position
+from texts import get_score, display_score, display_lose_screen
+from scenarios import display_scenario, get_ground_position, display_menu
 from random import randint
 from sys import exit
 
@@ -79,12 +79,14 @@ while True:
 
     if access_menu:
         # Sets the menu screen that's show at the beginning
-        screen.fill((94, 129, 162))
-        screen.blit(player_stand_surface, player_stand_rectangle)
-        display_menu_text(screen)
-        timer = pygame.time.get_ticks()
+        timer = display_menu(
+            screen,
+            player_stand_surface,
+            player_stand_rectangle,
+        )
     elif game_active:
-        # The game "happens" here.
+        # This is where the game actually "happens"
+
         # Puts the scenario and the score on the screen
         display_scenario(screen)
         display_score(screen, timer)
