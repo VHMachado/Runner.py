@@ -22,3 +22,10 @@ def snail():
     position = [randint(900, 1000), 232]
     rectangle = surface.get_rect(midbottom=(position))
     return surface, rectangle
+
+
+def fly():
+    surface = image.load("./Assets/graphics/Fly/Fly1.png").convert_alpha()
+    position = [randint(900, 1000), 140]
+    rectangle = surface.get_rect(midbottom=(position))
+    return surface, rectangle

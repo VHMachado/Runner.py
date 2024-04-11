@@ -1,7 +1,8 @@
 import pygame
-from characters import player_stand, player_walk_1, snail
+from characters import player_stand, player_walk_1, snail, fly
 from texts import get_score, display_score, display_lose_screen, display_menu_text
 from scenario import display_scenario, get_ground_position
+from random import randint
 from sys import exit
 
 
@@ -19,6 +20,7 @@ clock = pygame.time.Clock()
 
 # Creates the enemies in the game
 snail_surface, snail_rectangle = snail()
+fly_surface, fly_rectangle = fly()
 
 enemies_rect_list = []
 
@@ -67,7 +69,10 @@ while True:
                     game_active = True
 
         if event.type == enemy_timer and game_active:
-            enemies_rect_list.append(snail()[1])
+            if randint(0, 2):
+                enemies_rect_list.append(snail()[1])
+            else:
+                enemies_rect_list.append(fly()[1])
 
     if access_menu:
         screen.fill((94, 129, 162))
@@ -98,17 +103,20 @@ while True:
             for enemy_rectangle in enemies_rect_list:
                 enemy_rectangle.left -= 5
 
-                # Teleports the enemy back to it's initial position if it passes the screen limit
-                if enemy_rectangle.left <= -100:
-                    enemies_rect_list.remove(enemy_rectangle)
-
                 # Makes the player lose if the snail collide with the player
                 if player_rectangle.colliderect(enemy_rectangle):
                     final_score = get_score(timer)
                     game_active = False
                     enemies_rect_list = []
 
-                screen.blit(snail_surface, enemy_rectangle)
+                # Teleports the enemy back to it's initial position if it passes the screen limit
+                if enemy_rectangle.left <= -100:
+                    enemies_rect_list.remove(enemy_rectangle)
+
+                if enemy_rectangle.bottom == 232:
+                    screen.blit(snail_surface, enemy_rectangle)
+                else:
+                    screen.blit(fly_surface, enemy_rectangle)
         else:
             enemies_rect_list = []
 
