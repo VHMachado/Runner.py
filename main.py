@@ -1,5 +1,5 @@
 import pygame
-from characters import player_stand, player_walk_1, snail, fly
+from characters import player_stand, player_walk_1, snail, fly, gravity
 from texts import get_score, display_score, display_lose_screen
 from scenarios import display_scenario, get_ground_position, display_menu
 from random import randint
@@ -32,7 +32,7 @@ fly_surface, fly_rectangle = fly()
 # Sets initial variables
 timer = 0
 score = 0
-gravity = 0
+gravity_value = 0
 jump_cooldown = True
 access_menu = True
 game_active = False
@@ -92,8 +92,7 @@ while True:
         display_score(screen, timer)
 
         # Makes the player fall after it jumps
-        gravity += 1
-        player_rectangle.y += gravity
+        gravity(gravity_value, player_rectangle.y)
 
         if jump_cooldown == False:
             if ground_collision == True:

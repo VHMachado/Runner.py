@@ -29,3 +29,8 @@ def fly():
     position = [randint(900, 1000), 140]
     rectangle = surface.get_rect(midbottom=(position))
     return surface, rectangle
+
+
+def gravity(g, y):
+    g += 1
+    y += g
