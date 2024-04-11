@@ -31,6 +31,7 @@ def fly():
     return surface, rectangle
 
 
-def gravity(g, y):
-    g += 1
-    y += g
+def gravity(gravity, player_y):
+    gravity += 1
+    player_y += gravity
+    return gravity, player_y

@@ -56,11 +56,10 @@ while True:
                     # If the SPACE key is pressed in the game's menu, the game will start
                     access_menu = False
                     game_active = True
-                    snail_rectangle = snail()[1]
                 elif game_active:
                     # If the SPACE key is pressed during the game, the player will jump
                     if jump_cooldown == True:
-                        gravity = -20
+                        gravity_value = -20
                         jump_cooldown = False
                         ground_collision = False
                 else:
@@ -92,7 +91,7 @@ while True:
         display_score(screen, timer)
 
         # Makes the player fall after it jumps
-        gravity(gravity_value, player_rectangle.y)
+        gravity_value, player_rectangle.y = gravity(gravity_value, player_rectangle.y)
 
         if jump_cooldown == False:
             if ground_collision == True:
