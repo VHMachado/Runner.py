@@ -1,8 +1,16 @@
 import pygame
-from characters import player_stand, player_walk_1, snail, fly, gravity
 from texts import get_score, display_score, display_lose_screen
 from scenarios import display_scenario, get_ground_position, display_menu
 from random import randint
+from characters import (
+    player_stand,
+    player_walk_1,
+    snail,
+    fly,
+    gravity,
+    check_can_jump,
+    check_ground_collision,
+)
 from sys import exit
 
 
@@ -33,7 +41,7 @@ fly_surface, fly_rectangle = fly()
 timer = 0
 score = 0
 gravity_value = 0
-jump_cooldown = True
+can_jump = True
 access_menu = True
 game_active = False
 ground_position = get_ground_position()
@@ -58,14 +66,13 @@ while True:
                     game_active = True
                 elif game_active:
                     # If the SPACE key is pressed during the game, the player will jump
-                    if jump_cooldown == True:
+                    if can_jump == True:
                         gravity_value = -20
-                        jump_cooldown = False
+                        can_jump = False
                         ground_collision = False
                 else:
                     # If the SPACE key is pressed at the lose screen, the game will restart
                     timer = pygame.time.get_ticks()
-                    snail_rectangle = snail()[1]
                     game_active = True
 
         # The actions here are  executed only when both the game is active and the timer has ended
@@ -93,14 +100,15 @@ while True:
         # Makes the player fall after it jumps
         gravity_value, player_rectangle.y = gravity(gravity_value, player_rectangle.y)
 
-        if jump_cooldown == False:
-            if ground_collision == True:
-                jump_cooldown = True
+        # Makes the player stay above the ground
+        ground_collision, player_rectangle.bottom = check_ground_collision(
+            player_rectangle.bottom, ground_position[1]
+        )
 
-        # Player Movement
-        if player_rectangle.bottom >= ground_position[1]:
-            player_rectangle.bottom = ground_position[1]
-            ground_collision = True
+        # Sets the jump cooldown to "true" when the player hits the ground.
+        can_jump = check_can_jump(can_jump, ground_collision)
+
+        # Draws the player on the screen
         screen.blit(player_suface, player_rectangle)
 
         # Enemy Movement

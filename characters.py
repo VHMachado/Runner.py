@@ -35,3 +35,18 @@ def gravity(gravity, player_y):
     gravity += 1
     player_y += gravity
     return gravity, player_y
+
+
+def check_ground_collision(player_bottom, ground_position):
+    if player_bottom >= ground_position:
+        player_bottom = ground_position
+        return True, player_bottom
+    else:
+        return False, player_bottom
+
+
+def check_can_jump(can_jump, ground_collision):
+    if can_jump == False and ground_collision == True:
+        return True
+    else:
+        return False
