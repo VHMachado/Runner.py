@@ -1,5 +1,5 @@
 import pygame
-from texts import get_score, display_score, display_lose_screen
+from texts import display_score, display_lose_screen
 from scenarios import display_scenario, get_ground_position, display_menu
 from random import randint
 from characters import player_stand, player_walk_1, snail, fly
@@ -10,6 +10,10 @@ from game_mechanics import (
     gravity,
     check_ground_collision,
     player_jump,
+    move_enemies,
+    check_collisions,
+    remove_offscreen_enemies,
+    draw_enemies,
 )
 from sys import exit
 
@@ -44,6 +48,7 @@ gravity_value = 0
 can_jump = True
 access_menu = True
 game_active = False
+final_score = 0
 ground_position = get_ground_position()
 
 # Sets Timer
@@ -106,24 +111,12 @@ while True:
 
         # Controls enemies movement
         if enemies_rect_list:
-            for enemy_rectangle in enemies_rect_list:
-                enemy_rectangle.left -= 5
-
-                # Checks collisions
-                if player_rectangle.colliderect(enemy_rectangle):
-                    final_score = get_score(timer)
-                    game_active = False
-                    enemies_rect_list = []
-
-                # Deletes the enemy after it passess the screen limits
-                if enemy_rectangle.left <= -100:
-                    enemies_rect_list.remove(enemy_rectangle)
-
-                # Draws enemies on the screen
-                if enemy_rectangle.bottom == 232:
-                    screen.blit(snail_surface, enemy_rectangle)
-                else:
-                    screen.blit(fly_surface, enemy_rectangle)
+            move_enemies(enemies_rect_list)
+            enemies_rect_list, final_score, game_active = check_collisions(
+                enemies_rect_list, player_rectangle, final_score, game_active, timer
+            )
+            remove_offscreen_enemies(enemies_rect_list)
+            draw_enemies(screen, enemies_rect_list, snail_surface, fly_surface)
         else:
             enemies_rect_list = []
 
