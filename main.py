@@ -8,6 +8,7 @@ from game_mechanics import (
     play_again,
     close_game,
     gravity,
+    create_enemies,
     check_ground_collision,
     player_jump,
     move_enemies,
@@ -44,11 +45,11 @@ fly_surface, fly_rectangle = fly()
 # Sets initial variables
 timer = 0
 score = 0
+final_score = 0
 gravity_value = 0
 can_jump = True
 access_menu = True
 game_active = False
-final_score = 0
 ground_position = get_ground_position()
 
 # Sets Timer
@@ -79,10 +80,7 @@ while True:
         # The actions here are  executed only when both the game is active and the timer has ended
         if event.type == enemy_timer and game_active:
             # Chooses whether a snail or a fly will be spawned
-            if randint(0, 2):
-                enemies_rect_list.append(snail()[1])
-            else:
-                enemies_rect_list.append(fly()[1])
+            enemies_rect_list = create_enemies(enemies_rect_list, snail()[1], fly()[1])
 
     if access_menu:
         # Sets the menu screen that's show at the beginning
@@ -111,12 +109,25 @@ while True:
 
         # Controls enemies movement
         if enemies_rect_list:
+            # Controls enemies movement
             move_enemies(enemies_rect_list)
+
+            # Checks collisions
             enemies_rect_list, final_score, game_active = check_collisions(
                 enemies_rect_list, player_rectangle, final_score, game_active, timer
             )
+
+            # Deletes the enemy after it passess the screen limits
             remove_offscreen_enemies(enemies_rect_list)
-            draw_enemies(screen, enemies_rect_list, snail_surface, fly_surface)
+
+            # Draws enemies on the screen
+            draw_enemies(
+                screen,
+                enemies_rect_list,
+                snail_surface,
+                fly_surface,
+                ground_position[1],
+            )
         else:
             enemies_rect_list = []
 

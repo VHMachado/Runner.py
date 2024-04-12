@@ -1,5 +1,6 @@
 from pygame import quit, time
 from texts import get_score
+from random import randint
 
 
 def close_game():
@@ -23,6 +24,14 @@ def gravity(gravity, player_y):
     gravity += 1
     player_y += gravity
     return gravity, player_y
+
+
+def create_enemies(enemies_rect_list, snail_rectangle, fly_rectangle):
+    if randint(0, 2):
+        enemies_rect_list.append(snail_rectangle)
+    else:
+        enemies_rect_list.append(fly_rectangle)
+    return enemies_rect_list
 
 
 def check_ground_collision(player_bottom, ground_position):
@@ -63,9 +72,11 @@ def remove_offscreen_enemies(enemies_rect_list):
             enemies_rect_list.remove(enemy_rectangle)
 
 
-def draw_enemies(screen, enemies_rect_list, snail_surface, fly_surface):
+def draw_enemies(
+    screen, enemies_rect_list, snail_surface, fly_surface, ground_position
+):
     for enemy_rectangle in enemies_rect_list:
-        if enemy_rectangle.bottom == 232:
+        if enemy_rectangle.bottom == ground_position:
             screen.blit(snail_surface, enemy_rectangle)
         else:
             screen.blit(fly_surface, enemy_rectangle)
