@@ -1,8 +1,18 @@
 import pygame
 from texts import display_score, display_lose_screen
 from scenarios import display_scenario, get_ground_position, display_menu
-from random import randint
-from characters import player_stand, player_walk_1, snail, fly
+
+from characters import (
+    player_stand,
+    player_walk_1_sprite,
+    player_walk_2_sprite,
+    player_jumping_sprite,
+    player_animation,
+    create_player_rectangle,
+    snail,
+    fly,
+)
+
 from game_mechanics import (
     start_game,
     play_again,
@@ -17,9 +27,8 @@ from game_mechanics import (
     draw_enemies,
     reset_game_configurations,
 )
-from sys import exit
 
-
+# Initializes Pygame
 pygame.init()
 
 # Set game title
@@ -36,7 +45,14 @@ clock = pygame.time.Clock()
 player_stand_surface, player_stand_rectangle = player_stand()
 
 # Creates the player
-player_suface, player_rectangle = player_walk_1()
+player_index = 0
+player_walk_1_sprite = player_walk_1_sprite()
+player_walk_2_sprite = player_walk_2_sprite()
+player_walk = [player_walk_1_sprite, player_walk_2_sprite]
+
+player_jump_surface = player_jumping_sprite()
+
+player_rectangle = create_player_rectangle()
 
 # Creates the enemies in the game
 enemies_rect_list = []
@@ -53,7 +69,7 @@ access_menu = True
 game_active = False
 ground_position = get_ground_position()
 
-# Sets Timer
+# Creates the Timer for the enemy
 enemy_timer = pygame.USEREVENT + 1
 pygame.time.set_timer(enemy_timer, 1500)
 
@@ -90,6 +106,7 @@ while True:
             player_stand_surface,
             player_stand_rectangle,
         )
+
     elif game_active:
         # This is where the game actually "happens"
 
@@ -106,7 +123,14 @@ while True:
         )
 
         # Draws the player on the screen
-        screen.blit(player_suface, player_rectangle)
+        player_index = player_animation(
+            can_jump,
+            player_index,
+            screen,
+            player_walk,
+            player_jump_surface,
+            player_rectangle,
+        )
 
         # Controls enemies movement
         if enemies_rect_list:
@@ -135,7 +159,10 @@ while True:
     else:
         # Sets the lose screen that is show when the player loses
         enemies_rect_list, gravity_value, player_rectangle = reset_game_configurations(
-            enemies_rect_list, gravity_value, player_rectangle, player_walk_1()[1]
+            enemies_rect_list,
+            gravity_value,
+            player_rectangle,
+            create_player_rectangle(),
         )
         display_scenario(screen)
         display_lose_screen(screen, final_score)

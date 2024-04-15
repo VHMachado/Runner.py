@@ -1,6 +1,7 @@
 from pygame import quit, time
 from texts import get_score
 from random import randint
+from sys import exit
 
 
 def close_game():
