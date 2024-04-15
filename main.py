@@ -15,6 +15,7 @@ from game_mechanics import (
     check_collisions,
     remove_offscreen_enemies,
     draw_enemies,
+    reset_game_configurations,
 )
 from sys import exit
 
@@ -113,7 +114,7 @@ while True:
             move_enemies(enemies_rect_list)
 
             # Checks collisions
-            enemies_rect_list, final_score, game_active = check_collisions(
+            final_score, game_active = check_collisions(
                 enemies_rect_list, player_rectangle, final_score, game_active, timer
             )
 
@@ -133,6 +134,9 @@ while True:
 
     else:
         # Sets the lose screen that is show when the player loses
+        enemies_rect_list, gravity_value, player_rectangle = reset_game_configurations(
+            enemies_rect_list, gravity_value, player_rectangle, player_walk_1()[1]
+        )
         display_scenario(screen)
         display_lose_screen(screen, final_score)
 

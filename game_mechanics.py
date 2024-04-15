@@ -47,7 +47,7 @@ def player_jump(can_jump, gravity_value, ground_collision):
         gravity_value = -20
         can_jump = False
         ground_collision = False
-        return can_jump, gravity_value, ground_collision
+    return can_jump, gravity_value, ground_collision
 
 
 def move_enemies(enemies_rect_list):
@@ -62,8 +62,7 @@ def check_collisions(
         if player_rectangle.colliderect(enemy_rectangle):
             final_score = get_score(timer)
             game_active = False
-            enemies_rect_list = []
-    return enemies_rect_list, final_score, game_active
+    return final_score, game_active
 
 
 def remove_offscreen_enemies(enemies_rect_list):
@@ -80,3 +79,12 @@ def draw_enemies(
             screen.blit(snail_surface, enemy_rectangle)
         else:
             screen.blit(fly_surface, enemy_rectangle)
+
+
+def reset_game_configurations(
+    enemies_rect_list, gravity_value, player_rectangle, player_initial_position
+):
+    enemies_rect_list.clear()
+    gravity_value = 0
+    player_rectangle = player_initial_position
+    return enemies_rect_list, gravity_value, player_rectangle
