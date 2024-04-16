@@ -4,13 +4,17 @@ from scenarios import display_scenario, get_ground_position, display_menu
 
 from characters import (
     player_stand,
-    player_walk_1_sprite,
-    player_walk_2_sprite,
+    player_walk_frame_1,
+    player_walk_frame_2,
     player_jumping_sprite,
     player_animation,
     create_player_rectangle,
-    snail,
-    fly,
+    snail_frame_1,
+    snail_frame_2,
+    create_snail_rectangle,
+    fly_frame_1,
+    fly_frame_2,
+    create_fly_rectangle,
 )
 
 from game_mechanics import (
@@ -45,19 +49,47 @@ clock = pygame.time.Clock()
 player_stand_surface, player_stand_rectangle = player_stand()
 
 # Creates the player
-player_index = 0
-player_walk_1_sprite = player_walk_1_sprite()
-player_walk_2_sprite = player_walk_2_sprite()
-player_walk = [player_walk_1_sprite, player_walk_2_sprite]
+player_walk_frame_1 = player_walk_frame_1()
+player_walk_frame_2 = player_walk_frame_2()
+player_frames = [player_walk_frame_1, player_walk_frame_2]
+player_animation_index = 0
 
 player_jump_surface = player_jumping_sprite()
 
 player_rectangle = create_player_rectangle()
 
 # Creates the enemies in the game
+# Initializes the enemies list. All the enemies will be "stored" here during the gameplay
 enemies_rect_list = []
-snail_surface, snail_rectangle = snail()
-fly_surface, fly_rectangle = fly()
+
+# Initializes the snails frames and animation logic
+snail_frame_1 = snail_frame_1()
+snail_frame_2 = snail_frame_2()
+
+snail_frames = [snail_frame_1, snail_frame_2]
+snail_animation_index = 0
+
+snail_surface = snail_frames[snail_animation_index]
+
+# Initializes the flies frames and animation logic
+fly_frame_1 = fly_frame_1()
+fly_frame_2 = fly_frame_2()
+fly_frames = [fly_frame_1, fly_frame_2]
+fly_animation_index = 0
+
+fly_surface = fly_frames[fly_animation_index]
+
+# Creates a Timer for the enemy spawning
+enemy_timer = pygame.USEREVENT + 1
+pygame.time.set_timer(enemy_timer, 1500)
+
+# Creater a Timer for the Snail Animation
+snail_animation_timer = pygame.USEREVENT + 2
+pygame.time.set_timer(snail_animation_timer, 500)
+
+# Creater a Timer for the Snail Animation
+fly_animation_timer = pygame.USEREVENT + 3
+pygame.time.set_timer(fly_animation_timer, 200)
 
 # Sets initial variables
 timer = 0
@@ -68,10 +100,6 @@ can_jump = True
 access_menu = True
 game_active = False
 ground_position = get_ground_position()
-
-# Creates the Timer for the enemy
-enemy_timer = pygame.USEREVENT + 1
-pygame.time.set_timer(enemy_timer, 1500)
 
 while True:
     for event in pygame.event.get():
@@ -94,10 +122,27 @@ while True:
                     # If the SPACE key is pressed at the lose screen, the game will restart
                     timer, game_active = play_again(timer, game_active)
 
-        # The actions here are  executed only when both the game is active and the timer has ended
-        if event.type == enemy_timer and game_active:
-            # Chooses whether a snail or a fly will be spawned
-            enemies_rect_list = create_enemies(enemies_rect_list, snail()[1], fly()[1])
+        # The actions here are only executed when both the game is active and the respective timer has ended
+        if game_active:
+            if event.type == enemy_timer:
+                # Chooses whether a snail or a fly will be spawned
+                enemies_rect_list = create_enemies(
+                    enemies_rect_list, create_snail_rectangle(), create_fly_rectangle()
+                )
+
+            if event.type == snail_animation_timer:
+                if snail_animation_index == 0:
+                    snail_animation_index = 1
+                else:
+                    snail_animation_index = 0
+                snail_surface = snail_frames[snail_animation_index]
+
+            if event.type == fly_animation_timer:
+                if fly_animation_index == 0:
+                    fly_animation_index = 1
+                else:
+                    fly_animation_index = 0
+                fly_surface = fly_frames[fly_animation_index]
 
     if access_menu:
         # Sets the menu screen that's show at the beginning
@@ -123,11 +168,11 @@ while True:
         )
 
         # Draws the player on the screen
-        player_index = player_animation(
+        player_animation_index = player_animation(
             can_jump,
-            player_index,
+            player_animation_index,
             screen,
-            player_walk,
+            player_frames,
             player_jump_surface,
             player_rectangle,
         )
