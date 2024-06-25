@@ -1,4 +1,4 @@
-from pygame import quit, time
+from pygame import quit, time, mixer
 from texts import get_score
 from random import randint
 from sys import exit
@@ -43,9 +43,10 @@ def check_ground_collision(player_bottom, ground_position):
         return False, False, player_bottom
 
 
-def player_jump(can_jump, gravity_value, ground_collision):
+def player_jump(can_jump, gravity_value, ground_collision, jump_sound):
     if can_jump == True:
         gravity_value = -20
+        jump_sound.play()
         can_jump = False
         ground_collision = False
     return can_jump, gravity_value, ground_collision

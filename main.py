@@ -45,6 +45,11 @@ screen = pygame.display.set_mode(resolution)
 # Create the clock object, which is called inside the While loop in order to set the framerate
 clock = pygame.time.Clock()
 
+# Initializes background music
+background_music = pygame.mixer.Sound("./Assets/audio/music.wav")
+background_music.set_volume(0.3)
+background_music.play(loops=-1)
+
 # Creates the player sprite that is displayed at the game's menu
 player_stand_surface, player_stand_rectangle = player_stand()
 
@@ -53,6 +58,8 @@ player_walk_frame_1 = player_walk_frame_1()
 player_walk_frame_2 = player_walk_frame_2()
 player_frames = [player_walk_frame_1, player_walk_frame_2]
 player_animation_index = 0
+jump_sound = pygame.mixer.Sound("./Assets/audio/jump.mp3")
+jump_sound.set_volume(0.1)
 
 player_jump_surface = player_jumping_sprite()
 
@@ -116,7 +123,7 @@ while True:
                 elif game_active:
                     # If the SPACE key is pressed during the game, the player will jump
                     can_jump, gravity_value, ground_collision = player_jump(
-                        can_jump, gravity_value, ground_collision
+                        can_jump, gravity_value, ground_collision, jump_sound
                     )
                 else:
                     # If the SPACE key is pressed at the lose screen, the game will restart
